@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bikram Parui — Developer Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── CSS Variables ─────────────────────────────── */
+:root{
+  --bg:#050a0f;
+  --bg2:#0a1220;
+  --cyan:#00e5ff;
+  --pink:#ff2d78;
+  --gold:#ffd700;
+  --dim:#1a2a3a;
+  --text:#c8d8e8;
+  --white:#eef4ff;
+  --glow0:0 0 8px var(--cyan),0 0 24px var(--cyan);
+  --glow1:0 0 8px var(--pink),0 0 24px var(--pink);
+  --font-head:'Orbitron',monospace;
+  --font-body:'Space Mono',monospace;
+}
+
+/* ── Reset ─────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:14px;
+  line-height:1.7;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── Custom Cursor ─────────────────────────────── */
+#cursor{
+  position:fixed;width:14px;height:14px;
+  border:2px solid var(--cyan);
+  border-radius:50%;pointer-events:none;
+  transform:translate(-50%,-50%);
+  transition:width .15s,height .15s,border-color .15s;
+  mix-blend-mode:screen;z-index:9999;
+}
+#cursor-trail{
+  position:fixed;width:36px;height:36px;
+  border:1px solid rgba(0,229,255,.25);
+  border-radius:50%;pointer-events:none;
+  transform:translate(-50%,-50%);
+  transition:left .08s ease-out,top .08s ease-out;
+  z-index:9998;
+}
+body:hover #cursor{opacity:1}
+
+/* ── Particle Canvas ───────────────────────────── */
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── Scanline overlay ──────────────────────────── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px);
+  pointer-events:none;z-index:1;
+}
+
+/* ── Layout ────────────────────────────────────── */
+main{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* ── NAV ───────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 40px;
+  background:rgba(5,10,15,.82);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(0,229,255,.12);
+  z-index:100;
+}
+.nav-logo{
+  font-family:var(--font-head);font-size:1rem;
+  color:var(--cyan);letter-spacing:.15em;
+  text-shadow:var(--glow0);
+}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{
+  color:var(--text);text-decoration:none;font-size:.75rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  transition:color .2s,text-shadow .2s;
+}
+.nav-links a:hover{color:var(--cyan);text-shadow:var(--glow0)}
+
+/* ── HERO ──────────────────────────────────────── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding-top:80px;
+  position:relative;
+}
+.hero-eyebrow{
+  font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;
+  color:var(--pink);margin-bottom:12px;
+  animation:fadeSlideUp .6s ease both;
+}
+.hero-name{
+  font-family:var(--font-head);font-size:clamp(2.6rem,7vw,5.5rem);
+  font-weight:900;line-height:1.05;color:var(--white);
+  text-shadow:0 0 40px rgba(0,229,255,.25);
+  animation:fadeSlideUp .7s .1s ease both;
+}
+.hero-name span{color:var(--cyan);text-shadow:var(--glow0)}
+.hero-tagline{
+  margin-top:20px;font-size:clamp(1rem,2.5vw,1.3rem);
+  color:var(--text);min-height:2em;
+  animation:fadeSlideUp .7s .2s ease both;
+}
+#typed::after{
+  content:'|';animation:blink .7s infinite;color:var(--cyan);
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.hero-cta{
+  margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;
+  animation:fadeSlideUp .7s .35s ease both;
+}
+.btn{
+  display:inline-block;padding:12px 28px;
+  font-family:var(--font-body);font-size:.75rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:all .25s;
+}
+.btn-primary{
+  background:var(--cyan);color:#000;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+}
+.btn-primary:hover{background:var(--white);box-shadow:var(--glow0)}
+.btn-ghost{
+  background:transparent;color:var(--cyan);
+  border:1px solid var(--cyan);
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+}
+.btn-ghost:hover{background:rgba(0,229,255,.1);box-shadow:var(--glow0)}
+
+.hero-scroll{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  font-size:.6rem;letter-spacing:.25em;color:var(--dim);
+  animation:fadeSlideUp .7s .5s ease both;
+}
+.scroll-line{
+  width:1px;height:48px;background:linear-gradient(var(--cyan),transparent);
+  animation:scrollPulse 1.5s ease-in-out infinite;
+}
+@keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ── Section shell ─────────────────────────────── */
+section{padding:96px 0}
+.section-label{
+  font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;
+  color:var(--pink);margin-bottom:8px;
+}
+.section-title{
+  font-family:var(--font-head);font-size:clamp(1.6rem,4vw,2.6rem);
+  color:var(--white);margin-bottom:48px;
+  position:relative;display:inline-block;
+}
+.section-title::after{
+  content:'';position:absolute;bottom:-10px;left:0;
+  width:60%;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);
+}
+
+/* ── Reveal animation ──────────────────────────── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── About ─────────────────────────────────────── */
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
+}
+.photo-frame{
+  position:relative;width:260px;max-width:100%;
+  justify-self:center;
+}
+.photo-frame img{
+  width:100%;display:block;
+  filter:grayscale(30%) contrast(1.1);
+  clip-path:polygon(16px 0%,100% 0%,calc(100% - 16px) 100%,0% 100%);
+  transition:filter .4s;
+}
+.photo-frame:hover img{filter:none}
+.photo-frame::before{
+  content:'';position:absolute;inset:-6px;
+  background:linear-gradient(135deg,var(--cyan),var(--pink));
+  clip-path:polygon(16px 0%,100% 0%,calc(100% - 16px) 100%,0% 100%);
+  z-index:-1;
+  animation:borderPulse 3s ease-in-out infinite;
+}
+@keyframes borderPulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+.about-text p{margin-bottom:16px;color:var(--text)}
+.hobbies{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.hobby-chip{
+  padding:5px 14px;font-size:.7rem;letter-spacing:.08em;
+  border:1px solid rgba(0,229,255,.3);color:var(--cyan);
+  background:rgba(0,229,255,.05);
+  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+  transition:background .2s,box-shadow .2s;
+}
+.hobby-chip:hover{background:rgba(0,229,255,.12);box-shadow:var(--glow0)}
+
+/* ── Skills ────────────────────────────────────── */
+.skills-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;
+}
+.skill-card{
+  background:var(--bg2);
+  border:1px solid rgba(0,229,255,.1);
+  padding:24px;
+  clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+  transition:border-color .3s,box-shadow .3s,transform .3s;
+  position:relative;overflow:hidden;
+}
+.skill-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,229,255,.04),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.skill-card:hover{
+  border-color:var(--cyan);
+  box-shadow:var(--glow0);
+  transform:translateY(-4px);
+}
+.skill-card:hover::before{opacity:1}
+.skill-icon{font-size:1.8rem;margin-bottom:10px}
+.skill-name{
+  font-family:var(--font-head);font-size:.85rem;
+  color:var(--white);margin-bottom:14px;letter-spacing:.08em;
+}
+.skill-bar{
+  height:4px;background:var(--dim);border-radius:2px;overflow:hidden;
+}
+.skill-fill{
+  height:100%;width:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--pink));
+  transition:width 1.2s cubic-bezier(.4,0,.2,1) .3s;
+  box-shadow:0 0 8px var(--cyan);
+}
+
+/* ── Education ─────────────────────────────────── */
+.timeline{position:relative;padding-left:32px}
+.timeline::before{
+  content:'';position:absolute;left:8px;top:0;bottom:0;
+  width:2px;background:linear-gradient(var(--cyan),var(--pink),transparent);
+}
+.timeline-item{
+  position:relative;margin-bottom:40px;
+}
+.timeline-dot{
+  position:absolute;left:-28px;top:4px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--cyan);box-shadow:var(--glow0);
+  animation:dotPulse 2s ease-in-out infinite;
+}
+.timeline-dot.pink{background:var(--pink);box-shadow:var(--glow1)}
+.timeline-dot.gold{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+@keyframes dotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+.timeline-label{
+  font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--pink);margin-bottom:4px;
+}
+.timeline-school{
+  font-family:var(--font-head);font-size:1rem;
+  color:var(--white);margin-bottom:4px;
+}
+.timeline-school a{color:inherit;text-decoration:none;border-bottom:1px dashed rgba(0,229,255,.4)}
+.timeline-school a:hover{color:var(--cyan)}
+
+/* ── Projects ──────────────────────────────────── */
+.projects-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;
+}
+.project-card{
+  background:var(--bg2);
+  border:1px solid rgba(255,45,120,.15);
+  padding:32px;
+  position:relative;overflow:hidden;
+  transition:border-color .3s,box-shadow .3s,transform .3s;
+}
+.project-card::after{
+  content:'';position:absolute;bottom:-40px;right:-40px;
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,45,120,.12),transparent 70%);
+  transition:transform .4s;
+}
+.project-card:hover{
+  border-color:var(--pink);
+  box-shadow:var(--glow1);
+  transform:translateY(-6px);
+}
+.project-card:hover::after{transform:scale(2)}
+.project-num{
+  font-family:var(--font-head);font-size:3rem;font-weight:900;
+  color:rgba(255,45,120,.12);position:absolute;top:16px;right:20px;
+  line-height:1;
+}
+.project-title{
+  font-family:var(--font-head);font-size:1rem;
+  color:var(--white);margin-bottom:10px;
+}
+.project-desc{font-size:.78rem;color:var(--text);margin-bottom:20px}
+.project-link{
+  color:var(--pink);font-size:.72rem;letter-spacing:.1em;
+  text-decoration:none;text-transform:uppercase;
+  border-bottom:1px solid transparent;
+  transition:border-color .2s;
+}
+.project-link:hover{border-color:var(--pink)}
+
+/* ── Contact ───────────────────────────────────── */
+.contact-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;
+}
+.contact-card{
+  background:var(--bg2);
+  border:1px solid rgba(0,229,255,.08);
+  padding:24px;display:flex;gap:16px;align-items:center;
+  transition:border-color .3s,box-shadow .3s;
+}
+.contact-card:hover{border-color:var(--cyan);box-shadow:var(--glow0)}
+.contact-icon{font-size:1.5rem}
+.contact-info{}
+.contact-label{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--pink)}
+.contact-val{color:var(--white);font-size:.85rem;word-break:break-all}
+.contact-val a{color:var(--cyan);text-decoration:none}
+.contact-val a:hover{text-shadow:var(--glow0)}
+
+/* ── Footer ────────────────────────────────────── */
+footer{
+  text-align:center;padding:48px 24px;
+  border-top:1px solid rgba(0,229,255,.08);
+  font-size:.72rem;color:rgba(200,216,232,.4);
+  letter-spacing:.15em;position:relative;z-index:2;
+}
+footer span{color:var(--pink)}
+.easter-hint{
+  font-size:.6rem;color:rgba(200,216,232,.15);
+  margin-top:8px;letter-spacing:.1em;
+}
+
+/* ── Easter egg overlay ────────────────────────── */
+#konami-overlay{
+  display:none;position:fixed;inset:0;z-index:9990;
+  background:rgba(0,0,0,.92);
+  justify-content:center;align-items:center;flex-direction:column;gap:20px;
+  font-family:var(--font-head);
+}
+#konami-overlay.show{display:flex}
+#konami-overlay h2{
+  font-size:clamp(1.5rem,5vw,3rem);color:var(--gold);
+  text-shadow:0 0 20px var(--gold);
+  animation:glitch 1s infinite;
+}
+#konami-overlay p{color:var(--text);font-family:var(--font-body);font-size:.9rem}
+#konami-overlay button{
+  margin-top:16px;padding:12px 32px;
+  background:transparent;border:2px solid var(--gold);color:var(--gold);
+  font-family:var(--font-body);font-size:.8rem;letter-spacing:.1em;
+  cursor:pointer;transition:background .2s;
+}
+#konami-overlay button:hover{background:rgba(255,215,0,.15)}
+
+/* ── Click spark ───────────────────────────────── */
+.spark{
+  position:fixed;pointer-events:none;z-index:9997;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--cyan);
+  animation:sparkFly .6s ease-out forwards;
+}
+@keyframes sparkFly{
+  0%{opacity:1;transform:translate(0,0) scale(1)}
+  100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}
+}
+
+/* ── Glitch animation ──────────────────────────── */
+@keyframes glitch{
+  0%,90%,100%{text-shadow:0 0 20px var(--gold)}
+  92%{text-shadow:-3px 0 var(--cyan),-6px 0 var(--pink),0 0 20px var(--gold)}
+  96%{text-shadow:3px 0 var(--pink),6px 0 var(--cyan),0 0 20px var(--gold)}
+}
+.glitch-name{
+  display:inline-block;
+  animation:glitch 8s infinite;
+}
+
+/* ── Animations ────────────────────────────────── */
+@keyframes fadeSlideUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:none}
+}
+
+/* ── Responsive ────────────────────────────────── */
+@media(max-width:700px){
+  nav{padding:14px 20px}
+  .nav-links{gap:16px}
+  .about-grid{grid-template-columns:1fr}
+  .photo-frame{justify-self:start}
+  section{padding:64px 0}
+}
+@media(max-width:480px){
+  .nav-links{display:none}
+}
+
+/* ── Progress ring (idle animation on load) ─────── */
+.hex-deco{
+  position:absolute;right:-60px;top:10%;
+  width:320px;height:320px;opacity:.04;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpolygon points='100,5 175,47.5 175,152.5 100,195 25,152.5 25,47.5' fill='none' stroke='%2300e5ff' stroke-width='1'/%3E%3Cpolygon points='100,30 155,62 155,128 100,160 45,128 45,62' fill='none' stroke='%2300e5ff' stroke-width='1'/%3E%3C/svg%3E") center/contain no-repeat;
+  animation:hexSpin 20s linear infinite;
+  pointer-events:none;
+}
+@keyframes hexSpin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- Particle canvas -->
+<canvas id="stars"></canvas>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+
+<!-- Konami Easter Egg overlay -->
+<div id="konami-overlay">
+  <h2>🎮 CHEAT CODE ACTIVATED!</h2>
+  <p>You found Bikram's secret. Respect. 🫡</p>
+  <p style="font-size:.75rem;color:rgba(200,216,232,.5)">↑ ↑ ↓ ↓ ← → ← → B A</p>
+  <button onclick="document.getElementById('konami-overlay').classList.remove('show')">CLOSE [ESC]</button>
+</div>
+
+<!-- ── NAV ──────────────────────────── -->
+<nav>
+  <span class="nav-logo">BP</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- ── HERO ─────────────────────────── -->
+  <section id="hero">
+    <div class="hex-deco"></div>
+    <p class="hero-eyebrow">// welcome to my portfolio</p>
+    <h1 class="hero-name">
+      <span class="glitch-name">Bikram</span><br>Parui
+    </h1>
+    <p class="hero-tagline">
+      <span id="typed"></span>
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-ghost">Contact Me</a>
+    </div>
+    <div class="hero-scroll">
+      <span>SCROLL</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ────────────────────────── -->
+  <section id="about">
+    <div class="reveal">
+      <p class="section-label">// 01 — about</p>
+      <h2 class="section-title">Who Am I?</h2>
+    </div>
+    <div class="about-grid reveal">
+      <div class="photo-frame">
+        <img src="https://bikugithub.github.io/html-portfolio-by-bikram/myphoto.jpg"
+             alt="Bikram Parui"
+             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 260 320%22%3E%3Crect width=%22260%22 height=%22320%22 fill=%22%230a1220%22/%3E%3Ctext x=%22130%22 y=%22170%22 text-anchor=%22middle%22 fill=%22%2300e5ff%22 font-size=%2280%22%3E👤%3C/text%3E%3C/svg%3E'"/>
+      </div>
+      <div class="about-text">
+        <p>Hey there! I'm <strong style="color:var(--cyan)">Bikram Parui</strong> — a passionate developer from West Bengal, India who lives and breathes code. I love turning ideas into interactive experiences through the web.</p>
+        <p>When I'm not pushing pixels or wrangling APIs, you'll find me lost in a good book, vibing to music, or venturing somewhere new.</p>
+        <p>I 💖 CODING :]</p>
+        <div class="hobbies">
+          <span class="hobby-chip">📚 Reading</span>
+          <span class="hobby-chip">🎵 Music</span>
+          <span class="hobby-chip">🗺️ Exploring</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SKILLS ────────────────────────── -->
+  <section id="skills">
+    <div class="reveal">
+      <p class="section-label">// 02 — skills</p>
+      <h2 class="section-title">Tech Stack</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal" data-skill="88">
+        <div class="skill-icon">🌐</div>
+        <div class="skill-name">HTML & CSS</div>
+        <div class="skill-bar"><div class="skill-fill"></div></div>
+      </div>
+      <div class="skill-card reveal" data-skill="80">
+        <div class="skill-icon">⚡</div>
+        <div class="skill-name">JavaScript</div>
+        <div class="skill-bar"><div class="skill-fill"></div></div>
+      </div>
+      <div class="skill-card reveal" data-skill="72">
+        <div class="skill-icon">⚛️</div>
+        <div class="skill-name">React</div>
+        <div class="skill-bar"><div class="skill-fill"></div></div>
+      </div>
+      <div class="skill-card reveal" data-skill="68">
+        <div class="skill-icon">🟢</div>
+        <div class="skill-name">Node.js</div>
+        <div class="skill-bar"><div class="skill-fill"></div></div>
+      </div>
+      <div class="skill-card reveal" data-skill="65">
+        <div class="skill-icon">🍃</div>
+        <div class="skill-name">MongoDB</div>
+        <div class="skill-bar"><div class="skill-fill"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EDUCATION ─────────────────────── -->
+  <section id="education">
+    <div class="reveal">
+      <p class="section-label">// 03 — education</p>
+      <h2 class="section-title">My Journey</h2>
+    </div>
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-label">Primary</div>
+        <div class="timeline-school">Kochimon Sishu Angan</div>
+        <p style="font-size:.78rem">Where it all began — the foundation of curiosity.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot pink"></div>
+        <div class="timeline-label">Higher Secondary</div>
+        <div class="timeline-school">
+          <a href="https://school.banglarshiksha.gov.in/ws/website/index/19121415405" target="_blank" rel="noopener">
+            Kamalpore High School (H.S)
+          </a>
+        </div>
+        <p style="font-size:.78rem">Sharpened thinking and discovered the world of technology.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot gold"></div>
+        <div class="timeline-label">College</div>
+        <div class="timeline-school">
+          <a href="https://en.wikipedia.org/wiki/Sreegopal_Banerjee_College" target="_blank" rel="noopener">
+            Baghati College
+          </a>
+        </div>
+        <p style="font-size:.78rem">Levelled up. Building real-world skills one commit at a time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECTS ──────────────────────── -->
+  <section id="projects">
+    <div class="reveal">
+      <p class="section-label">// 04 — projects</p>
+      <h2 class="section-title">What I've Built</h2>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-num">01</div>
+        <div class="project-title">HTML &amp; CSS Portfolio</div>
+        <p class="project-desc">A handcrafted personal portfolio site built from scratch using pure HTML and CSS. Clean layout, thoughtful structure.</p>
+        <a href="https://bikugithub.github.io/html-portfolio-by-bikram/" target="_blank" class="project-link">View Live →</a>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-num">02</div>
+        <div class="project-title">Analog Clock</div>
+        <p class="project-desc">A beautifully animated analog clock built with HTML, CSS, and vanilla JavaScript — smooth real-time hand movement.</p>
+        <a href="https://bikugithub.github.io/analog-clock-by-bikram-using-HTML-CSS-JS/Clock%20Using%20HTML,%20CSS%20&%20JS/" target="_blank" class="project-link">View Live →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ───────────────────────── -->
+  <section id="contact">
+    <div class="reveal">
+      <p class="section-label">// 05 — contact</p>
+      <h2 class="section-title">Get In Touch</h2>
+    </div>
+    <div class="contact-grid reveal">
+      <div class="contact-card">
+        <div class="contact-icon">📞</div>
+        <div class="contact-info">
+          <div class="contact-label">Phone</div>
+          <div class="contact-val">+91 9641417625</div>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">✉️</div>
+        <div class="contact-info">
+          <div class="contact-label">Email</div>
+          <div class="contact-val">
+            <a href="mailto:bikramparui44@gmail.com">bikramparui44@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Made with <span>❣</span> by Bikram Parui · 2024</p>
+  <p class="easter-hint">psst... try the konami code ↑↑↓↓←→←→BA</p>
+</footer>
+
+<script>
+/* ─────────────────────────────────────────────
+   PARTICLE STARFIELD
+───────────────────────────────────────────── */
+(function(){
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let W,H,stars=[];
+  function resize(){
+    W=canvas.width=window.innerWidth;
+    H=canvas.height=window.innerHeight;
+  }
+  function initStars(){
+    stars=[];
+    const n=Math.floor(W*H/4000);
+    for(let i=0;i<n;i++){
+      stars.push({
+        x:Math.random()*W,y:Math.random()*H,
+        r:Math.random()*1.2+.2,
+        a:Math.random(),da:(Math.random()-.5)*.005,
+        speed:Math.random()*.15+.05,
+        color:Math.random()>.85?'#ff2d78':Math.random()>.7?'#ffd700':'#00e5ff'
+      });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    stars.forEach(s=>{
+      s.a+=s.da;
+      if(s.a<0)s.da=Math.abs(s.da);
+      if(s.a>1)s.da=-Math.abs(s.da);
+      s.y+=s.speed;
+      if(s.y>H){s.y=0;s.x=Math.random()*W}
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=s.color;
+      ctx.globalAlpha=s.a*.7;
+      ctx.fill();
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
+  }
+  resize();initStars();draw();
+  window.addEventListener('resize',()=>{resize();initStars()});
+})();
+
+/* ─────────────────────────────────────────────
+   CUSTOM CURSOR
+───────────────────────────────────────────── */
+const cur=document.getElementById('cursor');
+const trail=document.getElementById('cursor-trail');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+  setTimeout(()=>{trail.style.left=mx+'px';trail.style.top=my+'px'},60);
+});
+document.querySelectorAll('a,button,.btn,.skill-card,.project-card,.contact-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='26px';cur.style.height='26px';cur.style.borderColor='var(--pink)'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='14px';cur.style.height='14px';cur.style.borderColor='var(--cyan)'});
+});
+
+/* ─────────────────────────────────────────────
+   CLICK SPARK
+───────────────────────────────────────────── */
+document.addEventListener('click',e=>{
+  for(let i=0;i<8;i++){
+    const s=document.createElement('div');
+    s.className='spark';
+    s.style.left=e.clientX+'px';
+    s.style.top=e.clientY+'px';
+    const angle=Math.random()*Math.PI*2;
+    const dist=40+Math.random()*40;
+    s.style.setProperty('--tx',Math.cos(angle)*dist+'px');
+    s.style.setProperty('--ty',Math.sin(angle)*dist+'px');
+    s.style.background=Math.random()>.5?'var(--cyan)':'var(--pink)';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),600);
+  }
+});
+
+/* ─────────────────────────────────────────────
+   TYPING EFFECT
+───────────────────────────────────────────── */
+(function(){
+  const phrases=[
+    'Full-Stack Developer 👨‍💻',
+    'HTML · CSS · JavaScript',
+    'React & Node.js enthusiast',
+    'I 💖 CODING :]',
+    'Building the web, one line at a time.'
+  ];
+  const el=document.getElementById('typed');
+  let pi=0,ci=0,deleting=false,pause=0;
+  function tick(){
+    const phrase=phrases[pi];
+    if(pause>0){pause--;setTimeout(tick,50);return}
+    if(!deleting){
+      el.textContent=phrase.slice(0,++ci);
+      if(ci===phrase.length){deleting=true;pause=40}
+      setTimeout(tick,70);
+    } else {
+      el.textContent=phrase.slice(0,--ci);
+      if(ci===0){deleting=false;pi=(pi+1)%phrases.length;pause=10}
+      setTimeout(tick,35);
+    }
+  }
+  tick();
+})();
+
+/* ─────────────────────────────────────────────
+   SCROLL REVEAL
+───────────────────────────────────────────── */
+const revealEls=document.querySelectorAll('.reveal');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'),i*80);
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.12});
+revealEls.forEach(el=>observer.observe(el));
+
+/* ─────────────────────────────────────────────
+   SKILL BARS (animate when visible)
+───────────────────────────────────────────── */
+const skillCards=document.querySelectorAll('.skill-card');
+const skillObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const pct=e.target.dataset.skill+'%';
+      e.target.querySelector('.skill-fill').style.width=pct;
+      skillObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.4});
+skillCards.forEach(c=>skillObs.observe(c));
+
+/* ─────────────────────────────────────────────
+   KONAMI CODE EASTER EGG
+───────────────────────────────────────────── */
+(function(){
+  const seq=[38,38,40,40,37,39,37,39,66,65];
+  let idx=0;
+  document.addEventListener('keydown',e=>{
+    if(e.keyCode===seq[idx]){idx++;if(idx===seq.length){
+      document.getElementById('konami-overlay').classList.add('show');
+      idx=0;
+    }} else {idx=0}
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('konami-overlay').classList.remove('show')});
+})();
+
+/* ─────────────────────────────────────────────
+   EASTER EGG: Click "BP" logo 5 times
+───────────────────────────────────────────── */
+(function(){
+  let clicks=0;
+  const logo=document.querySelector('.nav-logo');
+  logo.style.cursor='pointer';
+  logo.addEventListener('click',()=>{
+    clicks++;
+    logo.style.textShadow=`0 0 ${clicks*8}px var(--cyan), 0 0 ${clicks*20}px var(--cyan)`;
+    if(clicks>=5){
+      logo.textContent='🚀 BIKRAM!';
+      setTimeout(()=>{logo.textContent='BP';logo.style.textShadow='';clicks=0},2500);
+    }
+  });
+})();
+
+/* ─────────────────────────────────────────────
+   EASTER EGG: Secret code word in console
+───────────────────────────────────────────── */
+console.log('%c🌟 Hey there, fellow developer! You must be curious. \nBikram appreciates that. Drop him a line! bikramparui44@gmail.com',
+  'color:#00e5ff;background:#050a0f;font-size:14px;padding:12px;font-family:monospace');
+</script>
+</body>
+</html>
