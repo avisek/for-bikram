@@ -62,7 +62,7 @@ Open your browser's DevTools console (`F12` or right-click → Inspect → Conso
 
 ## 🌐 Live Demo
 
-👉 **[See it live right here](https://bikugithub.github.io/html-portfolio-by-bikram/)**
+👉 **[See it live right here](https://avisek.github.io/for-bikram/)**
 
 Go on. Open it. Hover over things. Click things. Move your mouse around for no reason. That's the whole point.
 
